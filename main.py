@@ -4,26 +4,28 @@ import requests, time, datetime, sys
 from dateutil.relativedelta import relativedelta
 
 
-def main(args):
-    dummy_dict = {}
-    for arg in args:
-        if '=' in arg:
-            split = arg.split('=')
-            dummy_dict[split[0]] = split[1]
-    args = dummy_dict
+def main():
+    # dummy_dict = {}
+    # for arg in args:
+    #     if '=' in arg:
+    #         split = arg.split('=')
+    #         dummy_dict[split[0]] = split[1]
+    # args = dummy_dict
 
-    if 'github_id' not in args or 'github_id' not in args:
-        print('Required parameters are missing.')
-        exit(-1)
+    # if 'github_id' not in args or 'github_id' not in args:
+    #     print('Required parameters are missing.')
+    #     exit(-1)
 
     # init
     github_api_url = 'https://api.github.com'
-    github_id = args['github_id']
-    github_token = args['github_token']
+    # github_id = args['github_id']
+    # github_token = args['github_token']
+    github_id = 'limm-jk'
+    github_token = 'bbbb4cd8da46369513702c44d27551ce8436bdae'
 
-    search_topic = args.get('search_topic', 'hacktoberfest')
-    search_month_range = int(args.get('search_month_range', 6))
-    search_location = args.get('search_location', 'Korea')
+    search_topic = 'testingHacktoberkr'
+    search_month_range = 6
+    search_location = 'Korea'
     my_auth = (github_id, github_token)
 
     now_datetime = datetime.datetime.now()
@@ -33,7 +35,7 @@ def main(args):
         page = 1
         while True:
             search_base_time = str(now_datetime.strftime('%Y-%m-%d'))
-            topics = requests.get(url=github_api_url + f'/search/repositories?q=topic:{search_topic}+created:{search_base_time}&page={page}',
+            topics = requests.get(url=github_api_url + f'/search/repositories?q=topic:{search_topic}+pushed:{search_base_time}&page={page}',
                                   auth=my_auth,
                                   headers={'Accept': 'application/vnd.github.mercy-preview+json'}).json()
             time.sleep(5)
@@ -61,9 +63,9 @@ def main(args):
                     print(f'Found it! = createdat : {topic["created_at"]}, repository : {topic["html_url"]}')
 
             page = page + 1
-
+        print(now_datetime)
         now_datetime = now_datetime + datetime.timedelta(days=-1)
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
